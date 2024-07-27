@@ -1,0 +1,73 @@
+.login-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  height: 85%;
+  width: 80%;
+  background: white;
+  border-radius: 50px;
+  background: url("https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjEwNTktMDQxYy1rdjd2N3duYi5qcGc.jpg");
+}
+
+.left {
+  width: 60%;
+  height: 100%;
+  background: rgb(31, 60, 228);
+  margin-left: 0;
+  border-radius: 50px 0 0 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.left h1 {
+  margin: 50px;
+  color: white;
+  font-size: 50px;
+}
+
+.inputs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.inputs input {
+  padding: 24px;
+  margin-left: 150px;
+  width: 100%;
+  border-radius: 20px;
+  border: 1.5px solid black;
+}
+
+.loginBtn {
+  width: 100%;
+  margin: 40px 50px;
+}
+
+.loginBtn button {
+  padding: 24px;
+  width: 300px;
+  background: black;
+}
+
+.providers {
+  margin-left: 50px;
+  margin-top: -20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.providers button {
+  background: black;
+}
