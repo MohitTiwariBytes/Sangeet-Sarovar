@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
 const Login = () => {
@@ -19,12 +19,19 @@ const Login = () => {
   const app = initializeApp(firebaseConfig);
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
+  const gitProvider = new GithubAuthProvider();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   function writeUserData(userId, email) {
     const db = getDatabase();
     set(ref(db, 'users/' + userId), {
       userID: userId,
       email: email,
+    }).then(() => {
+      window.location.href = "/";
+    }).catch((error) => {
+      console.error("Error writing user data: ", error);
     });
   }
 
@@ -33,17 +40,14 @@ const Login = () => {
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        // ...
-        alert("User created", user)
-        writeUserData(user.uid, email, password)
+        alert("User created", user);
+        writeUserData(user.uid, email);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert(errorCode)
-        // ..
+        alert(errorCode);
       });
-
   }
 
   function createUserWithGoogle() {
@@ -54,29 +58,38 @@ const Login = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        writeUserData(user.uid, user.email)
-        // ...
+        writeUserData(user.uid, user.email);
+        setIsLoggedIn(true);
       }).catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        alert(error.code)
-        // ...
+        alert(errorCode);
+        setIsLoggedIn(false);
+      });
+  }
+
+  function createANewUserGithub() {
+    signInWithPopup(auth, gitProvider)
+      .then((result) => {
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        alert("User created!");
+        writeUserData(user.uid, user.email);
+        setIsLoggedIn(true);
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorCode);
+        setIsLoggedIn(false);
       });
   }
 
   const handleEmailLogin = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    createANewUserEmail(email, password)
-  }
-
-
+    createANewUserEmail(email, password);
+  };
 
   return (
     <div className="login-container">
@@ -95,7 +108,7 @@ const Login = () => {
               <button onClick={createUserWithGoogle} id="google">
                 <i className="fa-brands fa-google fa-2x"></i>
               </button>
-              <button id="github">
+              <button onClick={createANewUserGithub} id="github">
                 <i className="fa-brands fa-github fa-2x"></i>
               </button>
             </div>
