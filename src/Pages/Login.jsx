@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./Login.css";
-import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -10,25 +9,12 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { ref, set } from "firebase/database";
+import { auth, db } from "../Configs/firebaseConfig";
 
 const Login = () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyClZgByercTJQ-ywVmX2SfyEeZG_DXgrVY",
-    authDomain: "muse-dc3c5.firebaseapp.com",
-    projectId: "muse-dc3c5",
-    storageBucket: "muse-dc3c5.appspot.com",
-    messagingSenderId: "218996834414",
-    appId: "1:218996834414:web:16e333dcd7c85d831ea67f",
-    measurementId: "G-NBXDGNPY8P",
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
   const provider = new GoogleAuthProvider();
-  const auth = getAuth();
   const gitProvider = new GithubAuthProvider();
-  const db = getDatabase();
 
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
@@ -39,7 +25,7 @@ const Login = () => {
       username: username,
     })
       .then(() => {
-        window.location.href = "/";
+        window.location.href = "/profile";
       })
       .catch((error) => {
         console.error("Error writing user data: ", error);
@@ -49,33 +35,24 @@ const Login = () => {
   function createANewUserEmail(email, password, username) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed up
         const user = userCredential.user;
         alert("User created");
         writeUserData(user.uid, email, username);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorCode);
+        alert(error.code);
       });
   }
 
   function createUserWithGoogle() {
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
         const user = result.user;
         writeUserData(user.uid, user.email);
         setIsLoggedIn(true);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorCode);
+        alert(error.code);
         setIsLoggedIn(false);
       });
   }
@@ -83,17 +60,13 @@ const Login = () => {
   function createANewUserGithub() {
     signInWithPopup(auth, gitProvider)
       .then((result) => {
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         const user = result.user;
         alert("User created!");
         writeUserData(user.uid, user.email);
         setIsLoggedIn(true);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorCode);
+        alert(error.code);
         setIsLoggedIn(false);
       });
   }
@@ -101,15 +74,10 @@ const Login = () => {
   function signInUserEmail(email, password) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        alert("User logged in", user.uid);
-        console.log(user.uid);
-        // ...
+        alert("User logged in", userCredential.user.uid);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        alert(error.code);
       });
   }
 
@@ -143,7 +111,7 @@ const Login = () => {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   return (
     <div className="login-container">
