@@ -38,11 +38,12 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 36px;
+  gap: 16px;
+  margin-top: -20px;
 }
 
 .inputs input {
-  padding: 24px;
+  padding: 18px;
   margin-left: 150px;
   width: 100%;
   border-radius: 20px;
@@ -51,7 +52,7 @@
 
 .loginBtn {
   width: 100%;
-  margin: 40px 50px;
+  margin: 30px 50px;
 }
 
 .loginBtn button {
@@ -70,4 +71,9 @@
 
 .providers button {
   background: black;
+}
+
+.switchLogin{
+  margin-left: 50px;
+  margin-top: 15px;
 }
