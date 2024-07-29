@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.css";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider, signInWithEmailAndPassword} from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  GithubAuthProvider,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
-import firebase from "firebase/compat/app";
 
 const Login = () => {
   const firebaseConfig = {
@@ -13,7 +20,7 @@ const Login = () => {
     storageBucket: "muse-dc3c5.appspot.com",
     messagingSenderId: "218996834414",
     appId: "1:218996834414:web:16e333dcd7c85d831ea67f",
-    measurementId: "G-NBXDGNPY8P"
+    measurementId: "G-NBXDGNPY8P",
   };
 
   // Initialize Firebase
@@ -21,27 +28,28 @@ const Login = () => {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
   const gitProvider = new GithubAuthProvider();
-  const db = getDatabase()
+  const db = getDatabase();
 
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   function writeUserData(userId, email, username) {
-    const db = getDatabase();
-    set(ref(db, 'users/' + userId), {
+    set(ref(db, "users/" + userId), {
       userID: userId,
       email: email,
-      username: username
-    }).then(() => {
-      window.location.href = "/";
-    }).catch((error) => {
-      console.error("Error writing user data: ", error);
-    });
+      username: username,
+    })
+      .then(() => {
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        console.error("Error writing user data: ", error);
+      });
   }
 
   function createANewUserEmail(email, password, username) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed up 
+        // Signed up
         const user = userCredential.user;
         alert("User created");
         writeUserData(user.uid, email, username);
@@ -63,7 +71,8 @@ const Login = () => {
         const user = result.user;
         writeUserData(user.uid, user.email);
         setIsLoggedIn(true);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorCode);
@@ -80,7 +89,8 @@ const Login = () => {
         alert("User created!");
         writeUserData(user.uid, user.email);
         setIsLoggedIn(true);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorCode);
@@ -91,10 +101,10 @@ const Login = () => {
   function signInUserEmail(email, password) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in 
+        // Signed in
         const user = userCredential.user;
         alert("User logged in", user.uid);
-        console.log(user.uid)
+        console.log(user.uid);
         // ...
       })
       .catch((error) => {
@@ -110,17 +120,30 @@ const Login = () => {
     createANewUserEmail(email, password, username);
   };
 
-  const handleEmailLogin = () =>{
+  const handleEmailLogin = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     signInUserEmail(email, password);
-  }
+  };
 
-  const handleModeChange = () =>{
+  const handleModeChange = () => {
     setMode(!mode);
-  }
+  };
 
-  const [mode, setMode] = useState(false)
+  const [mode, setMode] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        window.location.href = "/profile";
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   return (
     <div className="login-container">
@@ -130,15 +153,36 @@ const Login = () => {
             <h1>Sign-Up</h1>
             <div className="inputs">
               <input id="email" type="text" placeholder="Email" />
-              <input style={{display: mode ? "none" : "block"}} id="username" type="name" placeholder="Username" />
+              <input
+                style={{ display: mode ? "none" : "block" }}
+                id="username"
+                type="name"
+                placeholder="Username"
+              />
               <input id="password" type="password" placeholder="Password" />
             </div>
             <div className="switchLogin">
-              <a onClick={handleModeChange} style={{ color: "black" }} href="#">{mode ? "Do not have any account? Sign up!" : "Already have any account? Sign in!"}</a>
+              <a onClick={handleModeChange} style={{ color: "black" }} href="#">
+                {mode
+                  ? "Do not have any account? Sign up!"
+                  : "Already have any account? Sign in!"}
+              </a>
             </div>
             <div className="loginBtn">
-              <button style={{display: mode ? "none" : "block"}} onClick={handleEmailSignUp} id="loginBtn">Sign-Up</button>
-              <button style={{display: mode ? "block" : "none"}} onClick={handleEmailLogin} id="loginBtn">Login</button>
+              <button
+                style={{ display: mode ? "none" : "block" }}
+                onClick={handleEmailSignUp}
+                id="loginBtn"
+              >
+                Sign-Up
+              </button>
+              <button
+                style={{ display: mode ? "block" : "none" }}
+                onClick={handleEmailLogin}
+                id="loginBtn"
+              >
+                Login
+              </button>
             </div>
             <div className="providers">
               <button onClick={createUserWithGoogle} id="google">
