@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./Profile.css";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, child, get } from "firebase/database";
 import { auth, db } from "../Configs/firebaseConfig";
+import "./Profile.css";
 
 const Profile = () => {
   const [name, setName] = useState(null);
@@ -56,7 +56,10 @@ const Profile = () => {
     <div className="profile-main">
       <div className="profile">
         <div className="topProfile">
-          <div className="name">
+          <button id="backBtn" onClick={() => window.location.replace("/")}>
+            Back
+          </button>
+          <div className="username">
             <h1 style={{ color: "white" }}>{name}</h1>
             <p style={{ color: "white" }}>{email}</p>
           </div>

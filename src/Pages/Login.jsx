@@ -13,98 +13,86 @@ import { ref, set } from "firebase/database";
 import { auth, db } from "../Configs/firebaseConfig";
 
 const Login = () => {
-  const provider = new GoogleAuthProvider();
-  const gitProvider = new GithubAuthProvider();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mode, setMode] = useState(false); // false: Sign-Up mode, true: Sign-In mode
 
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
-  function writeUserData(userId, email, username) {
+  // Initialize providers for Google and GitHub authentication
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
+
+  // Helper function to write user data to Firebase
+  const writeUserData = (userId, email, username = "DefaultUser") => {
     console.log("Writing data for user:", { userId, email, username });
-    set(ref(db, "users/" + userId), {
-      userID: userId,
-      email: email,
-      username: username,
-    })
-      .then(() => {
-        console.log("Data written successfully");
-      })
-      .catch((error) => {
-        console.error("Error writing user data: ", error);
-      });
-  }
+    set(ref(db, `users/${userId}`), { userID: userId, email, username })
+      .then(() => console.log("Data written successfully"))
+      .catch((error) => console.error("Error writing user data: ", error));
+  };
 
-  function createANewUserEmail(email, password, username) {
+  // Function to handle email and password user creation
+  const handleEmailSignUp = () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value;
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         alert("User created");
         writeUserData(user.uid, email, username);
       })
-      .catch((error) => {
-        alert(error.code);
-      });
-  }
-
-  function createUserWithGoogle() {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        writeUserData(user.uid, user.email);
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        alert(error.code);
-        setIsLoggedIn(false);
-      });
-  }
-
-  function createANewUserGithub() {
-    signInWithPopup(auth, gitProvider)
-      .then((result) => {
-        const user = result.user;
-        alert("User created!");
-        writeUserData(user.uid, user.email);
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        alert(error.code);
-        setIsLoggedIn(false);
-      });
-  }
-
-  function signInUserEmail(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert("User logged in", userCredential.user.uid);
-      })
-      .catch((error) => {
-        alert(error.code);
-      });
-  }
-
-  const handleEmailSignUp = () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const username = document.getElementById("username").value;
-    createANewUserEmail(email, password, username);
+      .catch((error) => alert(error.code));
   };
 
+  // Function to handle Google sign-in
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        writeUserData(user.uid, user.email, user.displayName || "GoogleUser");
+        setIsLoggedIn(true);
+      })
+      .catch((error) => {
+        alert(error.code);
+        setIsLoggedIn(false);
+      });
+  };
+
+  // Function to handle GitHub sign-in
+  const handleGithubSignIn = () => {
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        const user = result.user;
+        writeUserData(user.uid, user.email, user.displayName || "GitHubUser");
+        setIsLoggedIn(true);
+      })
+      .catch((error) => {
+        alert(error.code);
+        setIsLoggedIn(false);
+      });
+  };
+
+  // Function to handle email sign-in
   const handleEmailLogin = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    signInUserEmail(email, password);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) =>
+        alert("User logged in", userCredential.user.uid)
+      )
+      .catch((error) => alert(error.code));
   };
 
-  const handleModeChange = () => {
-    setMode(!mode);
-  };
+  // Toggle between sign-up and sign-in modes
+  const toggleMode = () => setMode((prevMode) => !prevMode);
 
-  const [mode, setMode] = useState(false);
-
+  // Monitor authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
-        setInterval(() => {
+        // Redirect to profile after a delay
+        setTimeout(() => {
           window.location.replace("/profile");
         }, 3000);
       } else {
@@ -120,45 +108,38 @@ const Login = () => {
       <div className="login-form">
         <div className="leftLogin">
           <div className="login">
-            <h1>Sign-Up</h1>
+            <h1>{mode ? "Sign-In" : "Sign-Up"}</h1>
             <div className="inputs">
               <input id="email" type="text" placeholder="Email" />
-              <input
-                style={{ display: mode ? "none" : "block" }}
-                id="username"
-                type="name"
-                placeholder="Username"
-              />
+              {!mode && (
+                <input id="username" type="text" placeholder="Username" />
+              )}
               <input id="password" type="password" placeholder="Password" />
             </div>
             <div className="switchLogin">
-              <a onClick={handleModeChange} style={{ color: "black" }} href="#">
+              <a onClick={toggleMode} href="#" style={{ color: "black" }}>
                 {mode
-                  ? "Do not have any account? Sign up!"
-                  : "Already have any account? Sign in!"}
+                  ? "Do not have an account? Sign up!"
+                  : "Already have an account? Sign in!"}
               </a>
             </div>
             <div className="loginBtn">
-              <button
-                style={{ display: mode ? "none" : "block" }}
-                onClick={handleEmailSignUp}
-                id="loginBtn"
-              >
-                Sign-Up
-              </button>
-              <button
-                style={{ display: mode ? "block" : "none" }}
-                onClick={handleEmailLogin}
-                id="loginBtn"
-              >
-                Login
-              </button>
+              {!mode && (
+                <button onClick={handleEmailSignUp} id="loginBtn">
+                  Sign-Up
+                </button>
+              )}
+              {mode && (
+                <button onClick={handleEmailLogin} id="loginBtn">
+                  Login
+                </button>
+              )}
             </div>
             <div className="providers">
-              <button onClick={createUserWithGoogle} id="google">
+              <button onClick={handleGoogleSignIn} id="google">
                 <i className="fa-brands fa-google fa-2x"></i>
               </button>
-              <button onClick={createANewUserGithub} id="github">
+              <button onClick={handleGithubSignIn} id="github">
                 <i className="fa-brands fa-github fa-2x"></i>
               </button>
             </div>

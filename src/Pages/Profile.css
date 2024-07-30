@@ -23,18 +23,18 @@
   align-items: center;
 }
 
-.name {
+.username {
   margin-bottom: 20px;
 }
 
-.name h1 {
+.username h1 {
   font-size: 2.5rem;
   margin: 0;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
 }
 
-.name p {
+.username p {
   font-size: 1.2rem;
   margin: 5px 0;
   font-family: "Poppins", sans-serif;
