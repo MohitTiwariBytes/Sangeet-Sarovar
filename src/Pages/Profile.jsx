@@ -55,17 +55,27 @@ const Profile = () => {
   return (
     <div className="profile-main">
       <div className="profile">
-        <div className="topProfile">
-          <button id="backBtn" onClick={() => window.location.replace("/")}>
-            Back
-          </button>
-          <div className="username">
-            <h1 style={{ color: "white" }}>{name}</h1>
-            <p style={{ color: "white" }}>{email}</p>
+        <div className="profile-header">
+          <img
+            className="profile-pic"
+            src="https://via.placeholder.com/100"
+            alt="Profile"
+          />
+          <div className="user-info">
+            <h1>{name}</h1>
+            <p>{email}</p>
           </div>
-          <button id="logoutBtn" onClick={signOutUser}>
-            Logout
-          </button>
+          <div className="buttons">
+            <button id="backBtn" onClick={() => window.location.replace("/")}>
+              Back
+            </button>
+            <button id="logoutBtn" onClick={signOutUser}>
+              Logout
+            </button>
+          </div>
+        </div>
+        <div className="profile-content">
+          <p>Gonna add addition content here</p>
         </div>
       </div>
     </div>
