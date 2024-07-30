@@ -17,15 +17,15 @@ const Login = () => {
   const gitProvider = new GithubAuthProvider();
 
   const [isLoggedIn, setIsLoggedIn] = useState(null);
-
   function writeUserData(userId, email, username) {
+    console.log("Writing data for user:", { userId, email, username });
     set(ref(db, "users/" + userId), {
       userID: userId,
       email: email,
       username: username,
     })
       .then(() => {
-        window.location.href = "/profile";
+        console.log("Data written successfully");
       })
       .catch((error) => {
         console.error("Error writing user data: ", error);
@@ -104,7 +104,9 @@ const Login = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
-        window.location.href = "/profile";
+        setInterval(() => {
+          window.location.replace("/profile");
+        }, 3000);
       } else {
         setIsLoggedIn(false);
       }

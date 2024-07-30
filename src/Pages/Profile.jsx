@@ -1,10 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, child, get } from "firebase/database";
 import { auth, db } from "../Configs/firebaseConfig";
 
 const Profile = () => {
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [userID, setUserID] = useState(null);
+
   function signOutUser() {
     signOut(auth)
       .then(() => {
@@ -20,7 +24,9 @@ const Profile = () => {
     get(child(dbRef, `users/${userId}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val());
+          const data = snapshot.val();
+          setName(data.username);
+          setEmail(data.email);
         } else {
           console.log("No data available");
         }
@@ -34,9 +40,10 @@ const Profile = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        setUserID(uid);
         getUserData(uid);
       } else {
-        alert("I don't think you are logged in, LOGIN~!~!~!~!~~");
+        window.location.replace("/login");
       }
     });
   }
@@ -49,7 +56,13 @@ const Profile = () => {
     <div className="profile-main">
       <div className="profile">
         <div className="topProfile">
-          <button onClick={signOutUser}>Logout</button>
+          <div className="name">
+            <h1 style={{ color: "white" }}>{name}</h1>
+            <p style={{ color: "white" }}>{email}</p>
+          </div>
+          <button id="logoutBtn" onClick={signOutUser}>
+            Logout
+          </button>
         </div>
       </div>
     </div>

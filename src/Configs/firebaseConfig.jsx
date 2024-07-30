@@ -6,7 +6,7 @@ import { getDatabase } from "firebase/database";
 const firebaseConfig = {
   apiKey: "AIzaSyClZgByercTJQ-ywVmX2SfyEeZG_DXgrVY",
   authDomain: "muse-dc3c5.firebaseapp.com",
-  databaseURL: "https://muse-dc3c5-default-rtdb.firebaseio.com",
+  databaseURL: "https://muse-dc3c5-default-rtdb.firebaseio.com/",
   projectId: "muse-dc3c5",
   storageBucket: "muse-dc3c5.appspot.com",
   messagingSenderId: "218996834414",

@@ -1,0 +1,61 @@
+.profile-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  color: white;
+}
+
+.profile {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.topProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.name {
+  margin-bottom: 20px;
+}
+
+.name h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+}
+
+.name p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+#logoutBtn {
+  background: #ff6f61;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#logoutBtn:hover {
+  background: #ff3f2e;
+}
+
+#logoutBtn:focus {
+  outline: none;
+}
