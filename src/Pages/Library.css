@@ -1,0 +1,20 @@
+.sidebarSide {
+  width: 30%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  margin-top: -300px;
+}
+
+.libraryMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.library {
+  width: 70%;
+  background-color: white;
+  height: 100%;
+}
