@@ -27,13 +27,6 @@ const Login = () => {
       userID: userId,
       email: email,
       username: username,
-    });
-    set(ref(db, `users/${userId}/library`), {
-      songs: {
-        song1: "song1",
-        song2: "song2",
-        song3: "song3",
-      },
     })
       .then(() => console.log("Data written successfully"))
       .catch((error) => console.error("Error writing user data: ", error));

@@ -15,6 +15,22 @@
 
 .library {
   width: 70%;
-  background-color: white;
   height: 100%;
+}
+
+.library-header {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  color: white;
+}
+
+.song-cards {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 31px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
 }

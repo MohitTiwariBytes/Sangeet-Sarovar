@@ -64,6 +64,24 @@
   transition: all 0.1s ease;
 }
 
+.button {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  gap: 21px;
+  width: 100%;
+}
+
+#addToLibraryBtn {
+  height: 30px;
+  padding: 2px;
+  background: none;
+  width: 30px;
+  background: black;
+  color: white;
+}
+
 .card button:hover {
   scale: 1.1;
 }

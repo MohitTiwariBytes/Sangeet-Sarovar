@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Card.css";
+import { ref, set } from "firebase/database";
+import { auth, db } from "../Configs/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Card = ({ setDataToSend, URL }) => {
   const [data, setData] = useState(null);
-  const [playingSong, setPlayingSong] = useState(null);
 
   const handlePlay = (song) => {
     setDataToSend({
@@ -11,6 +13,28 @@ const Card = ({ setDataToSend, URL }) => {
       artist: song.artist_name,
       album: song.album_image,
       url: song.audio,
+    });
+  };
+
+  const handleAddToLibrary = (song) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const songRef = ref(db, `users/${user.uid}/library/songs/${song.id}`);
+        set(songRef, {
+          name: song.name,
+          artist: song.artist_name,
+          album: song.album_image,
+          audio: song.audio,
+        })
+          .then(() => {
+            alert("Song added to your library!");
+          })
+          .catch((error) => {
+            console.error("Error adding song: ", error);
+          });
+      } else {
+        window.location.replace("/login");
+      }
     });
   };
 
@@ -31,7 +55,7 @@ const Card = ({ setDataToSend, URL }) => {
     if (URL) {
       getData();
     }
-  }, [URL]); // Re-run the effect when URL changes
+  }, [URL]);
 
   if (!data) {
     return (
@@ -47,7 +71,7 @@ const Card = ({ setDataToSend, URL }) => {
           flexDirection: "column",
         }}
       >
-        <span class="loader"></span>
+        <span className="loader"></span>
         <span>Loading may take some time, Please be patient!</span>
       </div>
     );
@@ -64,6 +88,12 @@ const Card = ({ setDataToSend, URL }) => {
           </div>
           <div className="button">
             <button onClick={() => handlePlay(song)}>Play</button>
+            <button
+              id="addToLibraryBtn"
+              onClick={() => handleAddToLibrary(song)}
+            >
+              +
+            </button>
           </div>
         </div>
       ))}
