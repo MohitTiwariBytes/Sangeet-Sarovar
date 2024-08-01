@@ -1,5 +1,5 @@
 .sidebarSide {
-  width: 30%;
+  width: 25%;
   height: 100%;
   position: fixed;
   top: 0;
@@ -33,4 +33,19 @@
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 50px;
+}
+
+.bottomBar {
+  position: fixed;
+  z-index: 1000;
+}
+
+#removeFromLibrary {
+  height: 30px;
+  padding: 2px;
+  background: none;
+  width: 30px;
+  background: rgb(248, 52, 52);
+  color: white;
+  border: none;
 }

@@ -7,6 +7,7 @@ let currentAudio = null;
 const BottomBar = ({ dataToSend }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [value, setValue] = useState(0);
+  const [volume, setVolume] = useState(1); // Default volume is 100%
   const audioRef = useRef(null);
   const durationRef = useRef(0);
   const currentDataToSend = useRef(dataToSend);
@@ -29,6 +30,7 @@ const BottomBar = ({ dataToSend }) => {
 
   useEffect(() => {
     if (audioRef.current) {
+      audioRef.current.volume = volume; // Set volume of the audio element
       if (isPlaying) {
         if (currentAudio && currentAudio !== audioRef.current) {
           currentAudio.pause();
@@ -42,7 +44,7 @@ const BottomBar = ({ dataToSend }) => {
         }
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, volume]);
 
   useEffect(() => {
     if (currentDataToSend.current.url !== dataToSend.url && currentAudio) {
@@ -69,8 +71,14 @@ const BottomBar = ({ dataToSend }) => {
   const handleChange = (input) => {
     const minutes = Math.floor(input / 60);
     const seconds = input % 60;
-    document.getElementById("minutes").innerText = String(minutes);
-    document.getElementById("seconds").innerText = String(seconds);
+    document.getElementById("minutes").innerText = String(minutes).padStart(
+      2,
+      "0"
+    );
+    document.getElementById("seconds").innerText = String(seconds).padStart(
+      2,
+      "0"
+    );
   };
 
   const handleSliderChange = (e) => {
@@ -79,6 +87,14 @@ const BottomBar = ({ dataToSend }) => {
     handleChange(input);
     if (audioRef.current) {
       audioRef.current.currentTime = input;
+    }
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
     }
   };
 
@@ -129,7 +145,14 @@ const BottomBar = ({ dataToSend }) => {
               </span>
             </div>
             <div className="volume">
-              <input type="range" />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+              />
               <i
                 style={{ color: "white" }}
                 className="fa-solid fa-volume-high fa-2x"
