@@ -9,28 +9,29 @@ const TopBar = () => {
   };
 
   return (
-    <div className="main-topbar">
-      <div className="topbar">
-        <div className="genre">
-          {["All", "Pop", "Rock", "Jazz", "Country"].map((genre) => (
-            <span
-              key={genre}
-              className={activeGenre === genre ? "active" : ""}
-              onClick={() => handleGenreClick(genre)}
-            >
-              {genre}
-            </span>
-          ))}
+    <div className="main-topbar-all">
+      <div className="main-topbar">
+        <div className="topbar">
+          <div className="genre">
+            {["All", "Pop", "Rock", "Jazz", "Country"].map((genre) => (
+              <span
+                key={genre}
+                className={activeGenre === genre ? "active" : ""}
+                onClick={() => handleGenreClick(genre)}
+              >
+                {genre}
+              </span>
+            ))}
+          </div>
+          <div className="userProfile">
+            <i
+              onClick={() => {
+                window.location.replace("login");
+              }}
+              className="fa-solid fa-user fa-2x"
+            ></i>
+          </div>
         </div>
-      </div>
-
-      <div className="userProfile">
-        <i
-          onClick={() => {
-            window.location.replace("login");
-          }}
-          className="fa-solid fa-user fa-2x"
-        ></i>
       </div>
     </div>
   );

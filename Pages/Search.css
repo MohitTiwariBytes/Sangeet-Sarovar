@@ -14,9 +14,3 @@ body {
 .inputMain {
   width: 60vw;
 }
-
-.songs {
-  position: absolute;
-  top: 10%;
-  width: 100%;
-}
