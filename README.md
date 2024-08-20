@@ -1,6 +1,6 @@
-Muse
+Sangeet Sarovar 
 
-Welcome to Muse! This application allows you to find and listen to thousands of royalty-free songs for free, using the Jamendo API.
+Welcome to Sangeet Sarovar This application allows you to find and listen to thousands of royalty-free songs for free, using the Jamendo API.
 
 Features
 
