@@ -18,9 +18,12 @@ Prerequisites
 
 Preview
 
-https://cloud-qrkac961l-hack-club-bot.vercel.app/0img_1131.jpg
+<img src="https://cloud-qrkac961l-hack-club-bot.vercel.app/0img_1131.jpg" alt="preview one">
+	
 
- https://cloud-qrkac961l-hack-club-bot.vercel.app/1img_1132.jpg
+<img src="https://cloud-qrkac961l-hack-club-bot.vercel.app/1img_1132.jpg" alt="preview two">
+
+https://cloud-qrkac961l-hack-club-bot.vercel.app/1img_1132.jpg
 
 Contributing
 
