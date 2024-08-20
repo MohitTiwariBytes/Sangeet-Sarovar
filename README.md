@@ -16,7 +16,11 @@ Prerequisites
 	•	An internet connection
 	•	A device running any internet browser 
 
+Preview
 
+https://cloud-qrkac961l-hack-club-bot.vercel.app/0img_1131.jpg
+
+ https://cloud-qrkac961l-hack-club-bot.vercel.app/1img_1132.jpg
 
 Contributing
 
