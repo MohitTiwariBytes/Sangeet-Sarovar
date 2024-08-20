@@ -26,4 +26,4 @@ Contact
 
 If you have any questions or need support, please contact us at mohittiwariis97@gmail.com.
 
-Enjoy your music experience with Muse!
+Enjoy your music experience with Sangeet Sarovar!
